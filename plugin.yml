@@ -1,0 +1,14 @@
+name: KitPvP
+author: zRA1Nz
+main: alohacraft.kitpvp.main.Main
+version: 1.2
+description: Plugin for Alohacraft KitPvP
+commands:
+  stats:
+    usage: /stats to view stats!
+    aliases: [s]
+    description: Shows players stats!
+  kitpvp:
+    usage: /kitpvp <args>
+    aliases: [k]
+    description: Shows players stats!
