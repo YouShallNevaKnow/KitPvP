@@ -21,9 +21,9 @@ public class EntityDamageByEntityEventListener implements Listener {
 				if (hitter instanceof Player) {
 					Player shooter = (Player) hitter;
 					Player player = (Player) entity;
-					Object hash = Main.getTeams().get(shooter.getName());
+					String hash = Main.getTeams().get(shooter.getName());
 					if (hash != null) {
-						if (hash.toString().equalsIgnoreCase(player.getName())) {
+						if (hash.equalsIgnoreCase(player.getName())) {
 							Util.error(player, "That player is on your team!");
 							e.setCancelled(true);
 						}
@@ -32,9 +32,9 @@ public class EntityDamageByEntityEventListener implements Listener {
 			} else if (hitter instanceof Player) {
 				Player player = (Player) entity;
 				Player damager = (Player) hitter;
-				Object hash = Main.getTeams().get(damager.getName());
+				String hash = Main.getTeams().get(damager.getName());
 				if (hash != null) {
-					if (hash.toString().equalsIgnoreCase(player.getName())) {
+					if (hash.equalsIgnoreCase(player.getName())) {
 						Util.error(player, "That player is on your team!");
 						e.setCancelled(true);
 					}
