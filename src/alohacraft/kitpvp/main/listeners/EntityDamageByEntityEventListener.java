@@ -1,11 +1,12 @@
 package alohacraft.kitpvp.main.listeners;
 
-import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+
 import alohacraft.kitpvp.main.Main;
 import alohacraft.kitpvp.main.Util;
 
@@ -14,31 +15,28 @@ public class EntityDamageByEntityEventListener implements Listener {
 	public void onDamage(EntityDamageByEntityEvent e) {
 		Entity entity = (Entity) e.getEntity();
 		Entity hitter = (Entity) e.getDamager();
-		//Arrow
-		if (e.getDamager() instanceof Arrow) {
-			Entity shooter = (Entity) ((Arrow) e.getDamager()).getShooter(); //get the shooter
-			if (shooter instanceof Player) {
-				if (entity instanceof Player) {
+		if (entity instanceof Player) {
+			if (hitter instanceof Projectile) {
+				hitter = (Entity) ((Projectile) e.getDamager()).getShooter();
+				if (hitter instanceof Player) {
+					Player shooter = (Player) hitter;
 					Player player = (Player) entity;
-					Player damager = (Player) shooter;
-					if(Main.getTeams().containsKey(damager.getName())) {
-						if (Main.getTeams().get(damager.getName()).equalsIgnoreCase(player.getName())) {
+					Object hash = Main.getTeams().get(shooter.getName());
+					if (hash != null) {
+						if (hash.toString().equalsIgnoreCase(player.getName())) {
 							Util.error(player, "That player is on your team!");
-							e.setCancelled(true);							
+							e.setCancelled(true);
 						}
 					}
 				}
-			}
-		}
-		//Physical
-		if (hitter instanceof Player) {
-			if (entity instanceof Player) {
+			} else if (hitter instanceof Player) {
 				Player player = (Player) entity;
 				Player damager = (Player) hitter;
-				if(Main.getTeams().containsKey(damager.getName())) {
-					if (Main.getTeams().get(damager.getName()).equalsIgnoreCase(player.getName())) {
+				Object hash = Main.getTeams().get(damager.getName());
+				if (hash != null) {
+					if (hash.toString().equalsIgnoreCase(player.getName())) {
 						Util.error(player, "That player is on your team!");
-						e.setCancelled(true);							
+						e.setCancelled(true);
 					}
 				}
 			}
