@@ -8,6 +8,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffect;
 
 
@@ -51,17 +52,18 @@ public class Util
 		return false;
 	}
 	public static void resetInv(final Player player) {
+		PlayerInventory inv = player.getInventory();
 		for (PotionEffect ef : player.getActivePotionEffects()) {
 			player.removePotionEffect(ef.getType());
 		}
 		player.getInventory().clear();
-		remArmor(player);
+		remArmor(player, inv);
 	}
 	@SuppressWarnings("deprecation")
-	public static void remArmor(final Player player) {
-		player.getInventory().setHelmet(new ItemStack(0));
-		player.getInventory().setChestplate(new ItemStack(0));
-		player.getInventory().setLeggings(new ItemStack(0));
-		player.getInventory().setBoots(new ItemStack(0));
+	public static void remArmor(final Player player, PlayerInventory inv) {
+		inv.setHelmet(new ItemStack(0));
+		inv.setChestplate(new ItemStack(0));
+		inv.setLeggings(new ItemStack(0));
+		inv.setBoots(new ItemStack(0));
 	}
 }
