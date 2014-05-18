@@ -1,5 +1,7 @@
 package alohacraft.kitpvp.main.commands;
 
+import java.util.ArrayList;
+
 import alohacraft.kitpvp.main.Main;
 import alohacraft.kitpvp.main.Util;
 
@@ -17,12 +19,14 @@ public class KillFeedCmd extends BaseCmd {
 
 	@Override
 	public boolean run() {
-		if (Main.getKillfeed().contains(player.getName())) {
-			Main.getKillfeed().remove(player.getName());
+		ArrayList<String> kf = Main.getKillfeed();
+		String pn = player.getName();
+		if (kf.contains(pn)) {
+			kf.remove(pn);
 			Util.error(player, "KillFeed has been Disabled!");
 			return true;
 		} else {
-			Main.getKillfeed().add(player.getName());
+			kf.add(pn);
 			Util.notify(player, "KillFeed has been Enabled!");
 			return true;
 		}

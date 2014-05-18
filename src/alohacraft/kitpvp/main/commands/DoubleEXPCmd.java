@@ -1,8 +1,7 @@
 package alohacraft.kitpvp.main.commands;
 
+import alohacraft.kitpvp.main.Main;
 import alohacraft.kitpvp.main.Util;
-import alohacraft.kitpvp.main.managers.DataManager;
-
 
 public class DoubleEXPCmd extends BaseCmd {
 	
@@ -18,20 +17,16 @@ public class DoubleEXPCmd extends BaseCmd {
 
 	@Override
 	public boolean run() {
-		DataManager datam = DataManager.getInstance();
-		if(datam.getConfig().getBoolean("DoubleEXP") == false) {
+		Boolean doubleexp = Main.getSettings().get("DoubleEXP");
+		if(doubleexp != true) {
 			Util.snotify(sender, "You have enabled Double EXP!");
 			Util.broadcast("Double EXP is Enabled!");
-			datam.getConfig().set("DoubleEXP", true);
-			datam.saveConfig();
-			datam.reloadConfig();
+			Main.getSettings().put("DoubleEXP", true);
 			return true;
 		} else {
 			Util.serror(sender, "You have disabled Double EXP!");
 			Util.broadcast("Double EXP is now Disabled!!");
-			datam.getConfig().set("DoubleEXP", false);
-			datam.saveConfig();
-			datam.reloadConfig();
+			Main.getSettings().put("DoubleEXP", true);
 			return true;
 		}
 	}

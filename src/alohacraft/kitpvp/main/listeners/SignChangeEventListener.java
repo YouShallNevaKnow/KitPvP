@@ -2,6 +2,7 @@ package alohacraft.kitpvp.main.listeners;
 
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -16,7 +17,9 @@ public class SignChangeEventListener implements Listener {
 		Player player = (Player) e.getPlayer();
 		Block b = e.getBlock();
 		String line = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Kit]";
-		if ((b.getState() instanceof Sign) && (e.getLine(0).equalsIgnoreCase("[kits]"))) {
+		BlockState bs = b.getState();
+		String line1 = e.getLine(0);
+		if ((bs instanceof Sign) && (line1.equalsIgnoreCase("[kits]"))) {
 			if (!player.hasPermission("ac.makekitsigns")) {
 				b.breakNaturally();
 				Util.error(player, "You can't make a kit sign!");
@@ -26,27 +29,7 @@ public class SignChangeEventListener implements Listener {
 				Util.msg(player, "You have made a kit sign! :) ");
 				return;
 			}
-		} else if ((b.getState() instanceof Sign) && (e.getLine(0).equalsIgnoreCase("[buy-tag]"))) {
-			if (!player.hasPermission("ac.makekitsigns")) {
-				b.breakNaturally();
-				Util.error(player, "You can't make a kit sign!");
-				return;
-			} else {
-				e.setLine(0, ChatColor.DARK_BLUE + "[Buy-Tag]");
-				Util.msg(player, "You have made a buy-tag sign!");
-				return;
-			}
-		} else if ((b.getState() instanceof Sign) && (e.getLine(0).equalsIgnoreCase("[use-tag]"))) {
-			if (!player.hasPermission("ac.makekitsigns")) {
-				b.breakNaturally();
-				Util.error(player, "You can't make a kit sign!");
-				return;
-			} else {
-				e.setLine(0, ChatColor.DARK_GREEN + "[Use-Tag]");
-				Util.msg(player, "You have made a use-tag sign!");
-				return;
-			}
-		} else if ((b.getState() instanceof Sign) && (e.getLine(0).equalsIgnoreCase("[buy-kit]"))) {
+		} else if ((bs instanceof Sign) && (line1.equalsIgnoreCase("[buy-kit]"))) {
 			if (!player.hasPermission("ac.makekitsigns")) {
 				b.breakNaturally();
 				Util.error(player, "You can't make a kit sign!");

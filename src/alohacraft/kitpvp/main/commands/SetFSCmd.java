@@ -1,5 +1,8 @@
 package alohacraft.kitpvp.main.commands;
 
+import org.bukkit.Location;
+import org.bukkit.configuration.file.FileConfiguration;
+
 import alohacraft.kitpvp.main.Util;
 import alohacraft.kitpvp.main.managers.DataManager;
 
@@ -19,10 +22,12 @@ public class SetFSCmd extends BaseCmd {
 	@Override
 	public boolean run() {
 		DataManager datam = DataManager.getInstance();
-		datam.getConfig().set("fs.world", player.getLocation().getWorld().getName());
-		datam.getConfig().set("fs.x", player.getLocation().getX());
-		datam.getConfig().set("fs.y", player.getLocation().getY());
-		datam.getConfig().set("fs.z", player.getLocation().getZ());
+		Location l = player.getLocation();
+		FileConfiguration con = datam.getConfig();
+		con.set("fs.world", l.getWorld().getName());
+		con.set("fs.x", l.getX());
+		con.set("fs.y", l.getY());
+		con.set("fs.z", l.getZ());
 		datam.saveConfig();
 		datam.reloadConfig();
 		Util.notify(player, "You have set the Fast Respawn Location!");

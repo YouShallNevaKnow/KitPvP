@@ -1,36 +1,45 @@
 package alohacraft.kitpvp.main.listeners;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerRespawnEvent;
+
 import alohacraft.kitpvp.main.Main;
 import alohacraft.kitpvp.main.kits.Moog;
 import alohacraft.kitpvp.main.managers.KitManager;
 
-public class PlayerRespawnEventListner implements Listener{
+public class PlayerRespawnEventListener implements Listener{
 	private Main plugin;
 	//This is your constructor, it's called when you first create the class instance
-	public PlayerRespawnEventListner(Main plugin) {
+	public PlayerRespawnEventListener(Main plugin) {
 		this.plugin = plugin;
 	}
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void whenRespawnkitpvp(PlayerRespawnEvent e){
 		Player player = (Player) e.getPlayer();
 		String id = player.getUniqueId().toString();
-		if (Main.getFRS().contains(id)) {
-			World w = Bukkit.getServer().getWorld(plugin.getConfig().getString("fs.world"));
-	        double x = plugin.getConfig().getDouble("fs.x");
-	        double y = plugin.getConfig().getDouble("fs.y");
-	        double z = plugin.getConfig().getDouble("fs.z");
+		ArrayList<String> frs = Main.getFRS();
+		if (frs.contains(id)) {
+			FileConfiguration con = plugin.getConfig();
+			String world = con.getString("fs.world");
+			World w = Bukkit.getServer().getWorld(world);
+	        double x = con.getDouble("fs.x");
+	        double y = con.getDouble("fs.y");
+	        double z = con.getDouble("fs.z");
 	        Location l = new Location(w, x, y, z);
 	        e.setRespawnLocation(l);
 		}
-		String kitname = Main.getKit().get(id);
+		HashMap<String, String> kit = Main.getKit();
+		String kitname = kit.get(id);
 		KitManager km = new KitManager();
 		switch (kitname) {
 		case "tank":

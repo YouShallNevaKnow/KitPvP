@@ -1,6 +1,9 @@
 package alohacraft.kitpvp.main.managers;
 
+import java.util.HashMap;
+
 import org.bukkit.entity.Player;
+
 import alohacraft.kitpvp.main.Main;
 import alohacraft.kitpvp.main.kits.Archer;
 import alohacraft.kitpvp.main.kits.Boxer;
@@ -25,7 +28,9 @@ import alohacraft.kitpvp.main.kits.Wither;
 public class KitManager {
 	public static KitManager km = new KitManager();
 	public void getLvl(final Player player, String kitname) {
-		int kitlvl = Main.getKitLevel().get(player.getUniqueId().toString());
+		HashMap<String, Integer> klvl = Main.getKitLevel();
+		String uuid = player.getUniqueId().toString();
+		int kitlvl = klvl.get(uuid);
 		switch (kitname) {
 		case "tank":
 			Tank Tank = new Tank();

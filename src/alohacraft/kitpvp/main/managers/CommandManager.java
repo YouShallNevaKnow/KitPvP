@@ -2,20 +2,16 @@ package alohacraft.kitpvp.main.managers;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-
 import alohacraft.kitpvp.main.Main;
 import alohacraft.kitpvp.main.Util;
-import alohacraft.kitpvp.main.commands.DataFixCmd;
 import alohacraft.kitpvp.main.commands.DoubleEXPCmd;
 import alohacraft.kitpvp.main.commands.InfoCmd;
 import alohacraft.kitpvp.main.commands.RewardCmd;
 import alohacraft.kitpvp.main.commands.BaseCmd;
-import alohacraft.kitpvp.main.commands.CompareCmd;
 import alohacraft.kitpvp.main.commands.FastRespawnCmd;
 import alohacraft.kitpvp.main.commands.KillFeedCmd;
 import alohacraft.kitpvp.main.commands.SetFSCmd;
@@ -29,11 +25,9 @@ public class CommandManager implements CommandExecutor {
     //Add Commands Here!
     public CommandManager(Main plugins) {
             cmds.add(new StatsCmd());
-            cmds.add(new CompareCmd());
             cmds.add(new FastRespawnCmd());
             cmds.add(new KillFeedCmd());
             cmds.add(new SetFSCmd());
-            cmds.add(new DataFixCmd());
             cmds.add(new RewardCmd());
             cmds.add(new DoubleEXPCmd());
             cmds.add(new InfoCmd(plugins));

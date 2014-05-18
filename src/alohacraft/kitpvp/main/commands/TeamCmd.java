@@ -5,6 +5,7 @@ import java.util.HashMap;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+
 import alohacraft.kitpvp.main.Main;
 import alohacraft.kitpvp.main.Util;
 
@@ -18,24 +19,30 @@ public class TeamCmd extends BaseCmd {
 		desc = ":: Join or leave Teams";
 		noperm = "You do not have permission for /kitpvp " + cmdName;
 	}
-	HashMap<String, String> teamque = new HashMap<String, String>();
+	@SuppressWarnings("deprecation")
 	@Override
 	public boolean run() {
-		String tn = args[2];
+		HashMap<String, String> teamque = new HashMap<String, String>();
 		String pn = player.getName();
+		String teamq = teamque.get(pn); 
+		String pt = Main.getTeams().get(pn);
 		if (args[1].equalsIgnoreCase("create")) {
-			if (Bukkit.getServer().getPlayer(args[2]) != null) {
-				if(!Main.getTeams().containsKey(pn)) {
-					if(!Main.getTeams().containsKey(tn)) {
-						if (!teamque.containsKey(pn)) {
-							if (!teamque.containsKey(tn)) {
+			Player pargs = (Player) Bukkit.getServer().getPlayer(args[2]);
+			if (pargs != null) {
+				if (pt == null){
+					String tn = pargs.getName();
+					String tt = Main.getTeams().get(tn);
+					if (tt == null) {
+						if (teamq == null) {
+							String teamt = teamque.get(tn);
+							if (teamt == null) {
 								Player target = (Player) Bukkit.getServer().getPlayer(tn);
 								teamque.put(pn, tn);
 								teamque.put(tn, pn);
 								Util.notify(player, "You have sent a(n) request to " + tn + "!"); 
 								Util.notify(target, pn + " has sent you a TEAM request!");
 								Util.notify(target, "Type '/k team accept " + pn + "' to join " + pn + " team!");
-								queDelay(player, target);
+								queDelay(player, target, teamque);
 								return true;
 							} else {
 								//Target is in que for a team
@@ -63,12 +70,12 @@ public class TeamCmd extends BaseCmd {
 				return true;
 			}
 		} else if (args[1].equalsIgnoreCase("leave")) {
-			if (Main.getTeams().containsKey(player.getName())) {
-				Player target = (Player) Bukkit.getServer().getPlayer(Main.getTeams().get(player.getName()));
-				Util.error(target, player.getName() + " has disbanded the team!");
+			if (pt != null) {
+				Player target = (Player) Bukkit.getServer().getPlayer(pt);
+				Util.error(target, pn + " has disbanded the team!");
 				Util.error(player, "You have disbanded the team!");
-				Main.getTeams().remove(Main.getTeams().get(player.getName()));
-				Main.getTeams().remove(player.getName());
+				Main.getTeams().remove(pt);
+				Main.getTeams().remove(pn);
 				return true;
 			} else {
 				//Players not on a team
@@ -76,14 +83,14 @@ public class TeamCmd extends BaseCmd {
 				return true;
 			}
 		} else if (args[1].equalsIgnoreCase("accept")) {
-			if (teamque.containsKey(player.getName())) {
-				Player target = (Player) Bukkit.getServer().getPlayer(teamque.get(player.getName()));
-				Util.notify(player, "You are now in a team with " + teamque.get(player.getName()) + "!");
-				Util.notify(target, "You are now in a team with " + player.getName() + "!");
-				Main.getTeams().put(player.getName(), teamque.get(player.getName()));
-				Main.getTeams().put(teamque.get(player.getName()), player.getName());
-				teamque.remove(teamque.get(player.getName()));
-				teamque.remove(player.getName());
+			if (teamq != null) {
+				Player target = (Player) Bukkit.getServer().getPlayer(teamq);
+				Util.notify(player, "You are now in a team with " + teamq + "!");
+				Util.notify(target, "You are now in a team with " + pn + "!");
+				Main.getTeams().put(pn, teamq);
+				Main.getTeams().put(teamq, pn);
+				teamque.remove(teamq);
+				teamque.remove(pn);
 				return true;
 			} else {
 				// Player does not have any team request	
@@ -91,12 +98,12 @@ public class TeamCmd extends BaseCmd {
 				return true;
 			}
 		} else if (args[1].equalsIgnoreCase("decline")) {
-			if (teamque.containsKey(player.getName())) {
-				Player target = (Player) Bukkit.getServer().getPlayer(teamque.get(player.getName()));
-				Util.error(target, player.getName() + " has declined your team request!");
+			if (teamq != null) {
+				Player target = (Player) Bukkit.getServer().getPlayer(teamq);
+				Util.error(target, pn + " has declined your team request!");
 				Util.error(player, "You have declined " + target.getName() + " team request!");
-				teamque.remove(teamque.get(player.getName()));
-				teamque.remove(player.getName());
+				teamque.remove(teamq);
+				teamque.remove(pn);
 				return true;
 			} else {
 				// Player does not have any team request	
@@ -104,8 +111,8 @@ public class TeamCmd extends BaseCmd {
 				return true;
 			}
 		} else if (args[1].equalsIgnoreCase("view")) {
-			if (Main.getTeams().containsKey(player.getName())) {
-				Util.notify(player, "You teamed up with " + ChatColor.YELLOW + Main.getTeams().get(player.getName()) + ChatColor.GREEN + "!");
+			if (pt != null) {
+				Util.notify(player, "You teamed up with " + ChatColor.YELLOW + pt + ChatColor.GREEN + "!");
 				return true;
 			} else {
 				//You are not in a team
@@ -118,13 +125,14 @@ public class TeamCmd extends BaseCmd {
 			return true;
 		}
 	}
-	public void queDelay(final Player player, final Player target) {
+	public void queDelay(final Player player, final Player target, final HashMap<String, String> hash) {
 	plugins.getServer().getScheduler().scheduleSyncDelayedTask(plugins, new Runnable() {
 			public void run() {
+				String pn = player.getName();
 				Util.error(player, "Your team request has expired!");
-				Util.error(target, player.getName() + " team request has expired!");
-				teamque.remove(player.getName());
-				teamque.remove(target.getName());
+				Util.error(target, pn + " team request has expired!");
+				hash.remove(pn);
+				hash.remove(target.getName());
 			}
 		}, 60 * 20L);
 	}

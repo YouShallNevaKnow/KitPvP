@@ -1,7 +1,7 @@
 name: KitPvP
 author: zRA1Nz
 main: alohacraft.kitpvp.main.Main
-version: 1.2
+version: 1.5
 description: Plugin for Alohacraft KitPvP
 commands:
   stats:

@@ -1,5 +1,7 @@
 package alohacraft.kitpvp.main.commands;
 
+import java.util.ArrayList;
+
 import alohacraft.kitpvp.main.Main;
 import alohacraft.kitpvp.main.Util;
 
@@ -17,12 +19,14 @@ public class FastRespawnCmd extends BaseCmd {
 
 	@Override
 	public boolean run() {
-		if (Main.getFRS().contains(player.getName())) {
-			Main.getFRS().remove(player.getName());
+		ArrayList<String> frs = Main.getFRS();
+		String pn = player.getName();
+		if (frs.contains(pn)) {
+			frs.remove(pn);
 			Util.error(player, "Fast Respawn has been Disabled!");
 			return true;
 		} else {
-			Main.getFRS().add(player.getName());
+			frs.add(pn);
 			Util.notify(player, "Fast Respawn has been Enabled!");
 			return true;
 		}

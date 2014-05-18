@@ -2,7 +2,6 @@ package alohacraft.kitpvp.main.managers;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -10,6 +9,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import alohacraft.kitpvp.main.Main;
+import alohacraft.kitpvp.main.threads.SaveThread;
 
 
 public class DataManager {
@@ -44,10 +44,10 @@ public class DataManager {
 		playerdata = YamlConfiguration.loadConfiguration(pdata);
 	}
 	//PLAYER DATA METHODS
-	public FileConfiguration getPlayerData() {
+	public FileConfiguration getDataFile() {
 		return playerdata;
 	}
-	public void savePlayerData() {
+	public void saveDataFile() {
 		try {
 			playerdata.save(pdata);
 		}
@@ -58,27 +58,9 @@ public class DataManager {
 	public void reloadPlayerData() {
 		playerdata = YamlConfiguration.loadConfiguration(pdata);
 	}
-	//Get the name!
-	public void loadData() {
-		List<String> s = playerdata.getStringList("players");
-		for (String str : s) {
-			String[] words = str.split(":");
-			Main.getKit().put(words[0], words[1]);
-			Main.getKitLevel().put(words[0], Integer.parseInt(words[2]));
-			Main.getKills().put(words[0], Integer.parseInt(words[3]));
-			Main.getDeaths().put(words[0], Integer.parseInt(words[4]));
-			Main.getKitExp().put(words[0], Integer.parseInt(words[5]));
-		}
-	}
-	//I never got the name
-	//Can't do those for's
-	public void saveData() {
-		List<String> s = playerdata.getStringList("players");
-		for (String id : Main.getKit().keySet()) {
-			s.add(id + ":" + Main.getKit().get(id) + ":" + Main.getKitLevel().get(id).toString() + ":" + Main.getKills().get(id).toString() + ":" + Main.getDeaths().get(id).toString() + ":" + Main.getKitExp().get(id).toString());
-		}
-		playerdata.set("players", s);
-		savePlayerData();
+	public void saveAllData() {
+		Thread save = new Thread(new SaveThread());
+		save.start();
 	}
 	public FileConfiguration getConfig() {
 		return config;

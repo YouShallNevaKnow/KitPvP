@@ -6,9 +6,11 @@ import org.bukkit.enchantments.EnchantmentWrapper;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+
 public class Items {
+	public static Items items = new Items();
 	@SuppressWarnings("deprecation")
-	public static void sword1(final Player player) {
+	public void sword1(final Player player) {
 		ItemStack knife = new ItemStack(Material.DIAMOND_SWORD);
 		ItemMeta knifeMeta = knife.getItemMeta();
 		knifeMeta.setDisplayName(ChatColor.AQUA + "The Sword Of Fifty Votes");
@@ -21,7 +23,7 @@ public class Items {
 		player.updateInventory();
 	}
 	@SuppressWarnings("deprecation")
-	public static void axe1(final Player player) {
+	public void axe1(final Player player) {
 		ItemStack knife = new ItemStack(Material.DIAMOND_AXE);
 		ItemMeta knifeMeta = knife.getItemMeta();
 		knifeMeta.setDisplayName(ChatColor.AQUA + "zRA1Nz's Long Lost Axe");
@@ -34,7 +36,7 @@ public class Items {
 		player.updateInventory();
 	}
 	@SuppressWarnings("deprecation")
-	public static void armor1(final Player player) {
+	public void armor1(final Player player) {
 		ItemStack a = new ItemStack(Material.DIAMOND_HELMET);
 		a.addUnsafeEnchantment(new EnchantmentWrapper(0), 5);
 		a.addUnsafeEnchantment(new EnchantmentWrapper(1), 5);
@@ -62,7 +64,7 @@ public class Items {
 		player.updateInventory();
 	}
 	@SuppressWarnings("deprecation")
-	public static void armor2(final Player player) {
+	public void armor2(final Player player) {
 		ItemStack knife = new ItemStack(Material.DIAMOND_CHESTPLATE);
 		ItemMeta knifeMeta = knife.getItemMeta();
 		knifeMeta.setDisplayName(ChatColor.YELLOW + "Chester's Chestplate");
@@ -72,7 +74,7 @@ public class Items {
 		player.updateInventory();
 	}
 	@SuppressWarnings("deprecation")
-	public static void apple(final Player player) {
+	public void apple(final Player player) {
 		ItemStack knife = new ItemStack(Material.GOLDEN_APPLE, 1, (byte)1);
 		player.getInventory().addItem(knife);
 		player.updateInventory();

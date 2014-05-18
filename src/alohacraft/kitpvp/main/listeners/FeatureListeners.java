@@ -1,6 +1,7 @@
 package alohacraft.kitpvp.main.listeners;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -34,9 +35,11 @@ public class FeatureListeners implements Listener {
 	}
 	@EventHandler(priority = EventPriority.HIGH)
 	public void hurtVoid(EntityDamageEvent e) {
-		if(e.getCause().equals(EntityDamageEvent.DamageCause.VOID)) {
-			if (e.getEntity() instanceof Player) {
-				Player player = (Player)e.getEntity();
+		DamageCause cause = e.getCause();
+		Entity entity = e.getEntity();
+		if(cause.equals(EntityDamageEvent.DamageCause.VOID)) {
+			if (entity instanceof Player) {
+				Player player = (Player)entity;
 				if (player.hasPermission("kitpvp.coal")) {
 					player.setHealth(20.0);
 					player.setFallDistance(0.0F);
@@ -47,14 +50,16 @@ public class FeatureListeners implements Listener {
 					return;
 				}
 			}
-		} else if(e.getEntity() instanceof Player && e.getCause() == DamageCause.FALL) e.setCancelled(true);
+		} else if(entity instanceof Player && cause == DamageCause.FALL) e.setCancelled(true);
 	}
 	@EventHandler
 	public void onArmorSlot(InventoryClickEvent e) {
 		if (e.getSlotType().equals(InventoryType.SlotType.ARMOR)){
 			HumanEntity entity = (HumanEntity) e.getWhoClicked();
 			Player player = (Player) entity;
-			if (Main.getKit().get(player.getName()).equalsIgnoreCase("hidden")) {
+			String pn = player.getName();
+			String kit = Main.getKit().get(pn);
+			if (kit.equalsIgnoreCase("hidden")) {
 				e.setCancelled(true);
 			}
 			return;

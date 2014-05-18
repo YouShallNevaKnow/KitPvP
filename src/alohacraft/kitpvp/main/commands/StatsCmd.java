@@ -7,7 +7,10 @@ import alohacraft.kitpvp.main.Main;
 
 
 public class StatsCmd extends BaseCmd {
-	
+	String uuid = player.getUniqueId().toString();
+	Integer kills = Main.getKills().get(uuid);
+	Integer deaths = Main.getDeaths().get(uuid);
+	Integer kitlvl = Main.getKitLevel().get(uuid);
 	public StatsCmd() {
 		super(plugins);
 		forcePlayer = true;
@@ -20,31 +23,31 @@ public class StatsCmd extends BaseCmd {
 
 	@Override
 	public boolean run() {
-		String p = player.getUniqueId().toString();
+		String pn = player.getName();
 		player.sendMessage(ChatColor.DARK_GRAY + "-----------------------[" + ChatColor.GREEN + "" + ChatColor.BOLD +"Stats" + ChatColor.DARK_GRAY + "]-----------------------");
-		player.sendMessage(ChatColor.DARK_GRAY + "- " + ChatColor.GREEN + "Kit Level: " + ChatColor.GRAY + Main.getKitLevel().get(p));
-		player.sendMessage(ChatColor.DARK_GRAY + "- " + ChatColor.GREEN + "Kit Exp: " + ChatColor.GRAY + Main.getKitExp().get(p) + "/" + getTotalNeeded(player));
-		player.sendMessage(ChatColor.DARK_GRAY + "- " + ChatColor.GREEN + "Score: " + ChatColor.GRAY + (Main.getKills().get(p) - Main.getDeaths().get(p)));
+		player.sendMessage(ChatColor.DARK_GRAY + "- " + ChatColor.GREEN + "Kit Level: " + ChatColor.GRAY + kitlvl);
+		player.sendMessage(ChatColor.DARK_GRAY + "- " + ChatColor.GREEN + "Kit Exp: " + ChatColor.GRAY + Main.getKitExp().get(uuid) + "/" + getTotalNeeded(player));
+		player.sendMessage(ChatColor.DARK_GRAY + "- " + ChatColor.GREEN + "Score: " + ChatColor.GRAY + (kills - deaths));
 		player.sendMessage(ChatColor.DARK_GRAY + "- " + ChatColor.GREEN + "K/D: " + ChatColor.GRAY + getKD(player));
-		player.sendMessage(ChatColor.DARK_GRAY + "- " + ChatColor.GREEN + "Kills: " + ChatColor.GRAY + Main.getKills().get(p));
-		player.sendMessage(ChatColor.DARK_GRAY + "- " + ChatColor.GREEN + "Deaths: " + ChatColor.GRAY + Main.getDeaths().get(p));
-		player.sendMessage(ChatColor.DARK_GRAY + "- " + ChatColor.GREEN + "Money: " + ChatColor.GRAY + "$" + Main.economy.getBalance(p));
+		player.sendMessage(ChatColor.DARK_GRAY + "- " + ChatColor.GREEN + "Kills: " + ChatColor.GRAY + kills);
+		player.sendMessage(ChatColor.DARK_GRAY + "- " + ChatColor.GREEN + "Deaths: " + ChatColor.GRAY + deaths);
+		player.sendMessage(ChatColor.DARK_GRAY + "- " + ChatColor.GREEN + "Money: " + ChatColor.GRAY + "$" + Main.economy.getBalance(pn));
 		player.sendMessage(ChatColor.DARK_GRAY + "-----------------------------------------------------");
 		return true;
 	}
 	private double getKD(Player player) {
-		if (Main.getKills().get(player.getName()) == 0) {
+		if (kills == 0) {
 			return 0;
 		} else {
-			if (Main.getDeaths().get(player.getName()) != 0) {
-				return Main.getKills().get(player.getName()) / (Main.getDeaths().get(player.getName()));
+			if (deaths != 0) {
+				return (kills/deaths);
 			} else {
-				return Main.getKills().get(player.getName());
+				return kills;
 			}
 		}
 	}
 	private int getTotalNeeded(Player player) {
-		int level = Main.getKitLevel().get(player.getName());
+		int level = kitlvl;
 		switch (level) {
 		case 1:
 			return 100;

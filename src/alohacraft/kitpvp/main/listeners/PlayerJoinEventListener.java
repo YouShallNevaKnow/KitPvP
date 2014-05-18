@@ -1,32 +1,44 @@
 package alohacraft.kitpvp.main.listeners;
 
-import org.bukkit.ChatColor;
+import java.util.HashMap;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffect;
+
 import alohacraft.kitpvp.main.Main;
 import alohacraft.kitpvp.main.kits.Moog;
+import alohacraft.kitpvp.main.managers.DataManager;
 import alohacraft.kitpvp.main.managers.KitManager;
-import ca.wacos.nametagedit.NametagAPI;
 
-public class PlayerJoinEventListner implements Listener {	
+public class PlayerJoinEventListener implements Listener {	
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent e) {	
 		Player player = (Player) e.getPlayer();
 		String id = player.getUniqueId().toString();
 		resetInv(player);
-		if(!Main.getKit().containsKey(id)) {
-			Main.getKit().put(id, "warrior");
+		HashMap<String, String> kit = Main.getKit();
+		DataManager datam = DataManager.getInstance();
+		String data = datam.getDataFile().getString("players." + id);
+		if(data == null) {
+			kit.put(id, "warrior");
 			Main.getKitExp().put(id, 0);
 			Main.getKitLevel().put(id, 1);
 			Main.getKills().put(id, 0);
 			Main.getDeaths().put(id, 0);
-			NametagAPI.setPrefix(player.getName(), ChatColor.DARK_GRAY + "[" + ChatColor.GREEN + "Lvl:" + Main.getKitLevel().get(id) + ChatColor.DARK_GRAY + "] " + ChatColor.WHITE);
+		} else {
+			String[] words = data.split(":");
+			kit.put(id, words[0]);
+			Main.getKitLevel().put(id, Integer.parseInt(words[1]));
+			Main.getKitExp().put(id, Integer.parseInt(words[2]));
+			Main.getKills().put(id, Integer.parseInt(words[3]));
+			Main.getDeaths().put(id, Integer.parseInt(words[4]));
 		}
-		String kitname = Main.getKit().get(id);
+		String kitname = kit.get(id);
 		KitManager km = new KitManager();
 		switch (kitname) {
 		case "tank":
@@ -101,9 +113,10 @@ public class PlayerJoinEventListner implements Listener {
 	}
 	@SuppressWarnings("deprecation")
 	public void remArmor(final Player player) {
-		player.getInventory().setHelmet(new ItemStack(0));
-		player.getInventory().setChestplate(new ItemStack(0));
-		player.getInventory().setLeggings(new ItemStack(0));
-		player.getInventory().setBoots(new ItemStack(0));
+		PlayerInventory inv = player.getInventory();
+		inv.setHelmet(new ItemStack(0));
+		inv.setChestplate(new ItemStack(0));
+		inv.setLeggings(new ItemStack(0));
+		inv.setBoots(new ItemStack(0));
 	}
 }
