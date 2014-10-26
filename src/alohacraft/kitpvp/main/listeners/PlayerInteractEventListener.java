@@ -24,7 +24,7 @@ import alohacraft.kitpvp.main.Util;
 import alohacraft.kitpvp.main.kits.Moog;
 import alohacraft.kitpvp.main.managers.KitManager;
 
-
+//Alex (TXjak or Agentleader1) is AWESOME! And was here! ;)
 public class PlayerInteractEventListener implements Listener {
 	private Main p;
 	public PlayerInteractEventListener(Main plugin) {
@@ -32,23 +32,24 @@ public class PlayerInteractEventListener implements Listener {
 	}
 	@EventHandler
 	public void onKitClick(PlayerInteractEvent e) {
-		Block b = e.getClickedBlock();
-		Player player = (Player) e.getPlayer();
-		BlockState bs = b.getState();
-		Action action = e.getAction();
-		ItemStack item = player.getItemInHand();
-		Material m  = item.getType();
-		if ((action.equals(Action.RIGHT_CLICK_BLOCK)) && (bs instanceof Sign)) {
-			ArrayList<String> cd = new ArrayList<String>();
-			Sign sign = (Sign)bs;
-			String line = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Kit]";
-			String sline = sign.getLine(0);
-			if (sline.equalsIgnoreCase(line)) {
-				// Tank Kit
-				if (!cd.contains(player.getName())) {
-					if(item == null || m.equals(Material.AIR)) {
+		if(e.action.equals(Action.RIGHT_CLICK_BLOCK)){
+			Block b = e.getClickedBlock();
+			Player player = e.getPlayer();
+			BlockState bs = b.getState();
+			Action action = e.getAction();
+			ItemStack item = player.getInventory().getItemInHand();
+			Material m  = item.getType();
+			if ((action.equals(Action.RIGHT_CLICK_BLOCK)) && (bs instanceof Sign)) {
+				ArrayList<String> cd = new ArrayList<String>();
+				Sign sign = (Sign)bs;
+				String line = ChatColor.DARK_RED + "" + ChatColor.BOLD + "[Kit]";
+				String sline = sign.getLine(0);
+				if (sline.equalsIgnoreCase(line)) {
+					// Tank Kit
+					if (!cd.contains(player.getName())) {
+						if(item == null || m.equals(Material.AIR)) {
 						resetInv(player, cd);
-						String kitname = sign.getLine(2).toLowerCase();
+							String kitname = sign.getLine(2).toLowerCase();
 						String pn = player.getUniqueId().toString();
 						KitManager km = new KitManager();
 						HashMap<String, String> kit = Main.getKit();
@@ -187,7 +188,8 @@ public class PlayerInteractEventListener implements Listener {
 							break;
 						default:
 							break;
-						}
+						}else { //possible mess up of the brackets! ;)
+						Util.error(player, "Please select a kit with a blank slot in your hotbar!");
 					} else {
 						Util.error(player, "Please select a kit with a blank slot in your hotbar!");
 					}
@@ -234,13 +236,22 @@ public class PlayerInteractEventListener implements Listener {
 			}
 		}
 	}
+	}
 	public void resetInv(final Player player, ArrayList<String> cd) {
 		// Clear armor and Inventory
 		for (PotionEffect ef : player.getActivePotionEffects()) {
 			player.removePotionEffect(ef.getType());
 		}
 		PlayerInventory i = player.getInventory();
-		i.clear();
+		//i.clear(); Do not clear this! People lose their potions from this!
+		//Let's check if the contents is a potion **clicks tongue** or nah.
+		for(ItemStack i : player.getInventory().getContents()){
+			if(i.getType().equals(Material.POTION)){//it is a potion, so carry on
+				return; //may be wrong here, remove sentence in case! ;)
+			}else{//It isn't, let's clear it!
+				i.setType(Material.AIR);
+			}
+		}
 		remArmor(player);
 		//Add items
 		cd.add(player.getName());
